@@ -1,0 +1,38 @@
+%% Data set
+% (with the SVM-KM library)
+n = 500; % upto n = 10000;
+sigma=1.4;
+[Xapp,yapp,Xtest,ytest]=dataset_KM('Mixture',n,n^2,sigma);
+[n,p] = size(Xapp);
+figure(1);
+clf;
+set(gcf,'Color',[1,1,1])
+hold on
+h1=plot(Xapp(yapp==1,1),Xapp(yapp==1,2),'+r');
+set(h1,'LineWidth',2);
+h2=plot(Xapp(yapp==-1,1),Xapp(yapp==-1,2),'db');
+set(h2,'LineWidth',2);
+%plotar el test set para ver como esta
+%think about to normalize the data
+%data set = [point ,  label]
+dataSet = [Xapp ; Xtest];
+labels = [yapp ; ytest];
+
+[N,D]=size(dataSet);
+
+sigma1=[1 .3; .3 1];
+sigma2=[.25 .3; .3 1];
+n=poissrnd(100);
+for i=1:N
+    mu=dataSet(i,:);
+    if labels(i)==1 % class 1
+        sampleData = mvnrnd(mu,sigma1,n);  % sampling some points
+        memberDegree=sqrt(det(sigma1)*(2*pi)^2)*mvnpdf( sampleData,mu,sigma1); % membership degree of the sampled points
+        
+    else % class 2
+        sampleData = mvnrnd(mu,sigma2,n);  % sampling some points
+        memberDegree=sqrt(det(sigma2)*(2*pi)^2)*mvnpdf( sampleData,mu,sigma2); % membership degree of the sampled points
+        
+    end
+    dataCell{i} ={sampleData,memberDegree,labels(i)};
+end

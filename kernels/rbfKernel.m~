@@ -1,0 +1,13 @@
+%rbf Kernel
+%input x = m
+
+function k=rbfKernel(x,z,gamma)
+dx=diag(x*x');
+dz=diag(z*z');
+s=size(z);
+xx=dx*ones(1,s(1));
+s=size(x);
+zz=ones(s(1),1)*dz';
+
+k=exp(-gamma*(xx-2*x*z'+zz));
+%k=exp(-gamma*(-2*x*z'));

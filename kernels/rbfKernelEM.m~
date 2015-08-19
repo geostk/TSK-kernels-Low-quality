@@ -1,0 +1,33 @@
+%rbf Kernel with error measurement
+%input x = m1,n z=m2,n  
+%output rbf kernel between x and z
+
+function k=rbfKernelEM(X,Z,stdX,stdZ)
+
+[m,n]=size(X);
+[p,q]=size(Z);
+for i=1:m
+    gamma(i)={1./bsxfun(@plus, stdX(i,:).^2,stdZ.^2)};
+    %C{1}(1,:)  is  y(1,1)
+end
+
+for i=1:m
+    for j=1:p
+      XX(i,j)=X(i,:)*(X(i,:).*gamma{i}(j,:))';
+    end
+    
+end
+
+for i=1:m
+    for j=1:p
+      XZ(i,j)=X(i,:)*(Z(j,:).*gamma{i}(j,:))';
+    end
+    
+end
+
+for i=1:m
+    for j=1:p
+      ZZ(i,j)=Z(j,:)*(Z(j,:).*gamma{i}(j,:))';
+    end
+    
+end
